@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title></title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="js/editormd/css/style.css" />
+    <link rel="stylesheet" href="js/editormd/css/editormd.css" />
+    <script src="js/editormd/jquery.min.js"></script>
+    <script src="js/editormd/editormd.js"></script>
+</head>
+<style type="text/css">
+html{
+    height: 100%;
+}
+.header{
+    width: 100%;
+    height: 30px;
+    background: #2e6da4;
+    line-height: 30px;
+    color: white;
+    font-size: 18px;
+    text-align: center;
+    -webkit-app-region: drag;
+    position: fixed;
+    z-index: 99;
+    top: 0px;
+}
+.editormd{
+    margin: 0px;
+}
+</style>
+<body>
+    <div class="header">MarkDown Editor</div>
+   <!--  <div id="_Folders_" style="margin-top: 30px; float: left;width:150px;">
+        <ul>
+            <li>Test-Folder </li>
+            <li>Test-Folder </li>
+            <li>Test-Folder </li>
+            <li>Test-Folder </li>
+            <li>Test-Folder </li>
+            <li>Test-Folder </li>
+            <li>Test-Folder </li>
+        </ul>
+    </div> -->
+    <div id="_editormd_" style="margin-top: 30px; float: right;"> </div>
+    <div id="_hidden_form" style="display: none;">
+        <input id="open-save" type="file" nwsaveas>
+        <input id="open-file" type="file">
+    </div>
+</body>
+<script>
+$(function() {
+    console.log( editormd.toolbarHandlers);
+    initEditor( );
+    console.log( OB_MdEditor );
+    
+});
+
+    
+// change Height
+$(window).resize(function ( ) {
+    if( OB_MdEditor ){
+        OB_MdEditor.resize( getEditorWidth( ), getEditorHeight( ) );
+        OB_MdEditor.resize( getEditorWidth( ), getEditorHeight( ) );
+    }
+});
+
+$("#open-save").change(function ( Even ){
+    if( Even && Even.target && Even.target.value ){
+        doSaveData( OB_MdEditor, Even.target.value );
+    }
+});
+$("#open-file").change(function ( Even ){
+    if( Even && Even.target && Even.target.value ){
+        doLoadData( OB_MdEditor, Even.target.value );
+    }
+});
+
+
+
+</script>
+<script type="text/javascript">
+"use strict";
+// init Editor
+let OB_MdEditor;
+function initEditor( ){
+    OB_MdEditor = editormd("_editormd_", {
+        syncScrolling : "single",
+        path    : "js/editormd/lib/",
+        toolbarIcons: "nw-app",
+        disabledKeyMaps:[
+            "F11"
+        ],
+        toolbarHandlers:{
+            "open-file": function( ){
+                $("#open-file").click( );
+            },
+            "save-file": function( ){
+                $("#open-save").click( );
+            },
+        },
+        onload: function( ){
+          this.resize( getEditorWidth( ), getEditorHeight( ) );
+        },
+        onchange: function( ){
+
+        }
+    });
+};
+
+// getEditorHeight
+function getEditorHeight( _Int ){
+    let I_Header = parseInt( $(".header").outerHeight( ) );
+    let I_Body = parseInt( $("html").outerHeight( ) );
+    if( !_Int ){
+        return I_Body - I_Header;
+    }
+    return (I_Body - I_Header)*_Int;
+};
+
+// getEditorWidth
+function getEditorWidth( _Int ){
+    return $(".header").outerWidth( )-parseInt( $("#_Folders_").outerWidth( ));
+};
+// watch
+function watch( selector, Fn_CallBack, Ob_Config ) {
+    let targetNode = typeof selector == "string"?document.querySelector( selector ):selector;
+    return new MutationObserver( Fn_CallBack?Fn_CallBack:function( ){ Ev } ).observe(targetNode, Ob_Config?Ob_Config:{
+        attributes: true, childList: true, subtree: true
+    });
+};
+</script>
+<script type="text/javascript">
+"use strict"; // nodejs 代码, 暂时不引入工具包, 后续引入; 功能够用就行
+ const KFileTools = require("./js/common/KFileTools.js");
+// doLoadData
+function doLoadData( _editormd, Tx_FilePath ){
+    if( !_editormd ){
+        return;
+    }
+    KFileTools.readFileAsync(Tx_FilePath, {}, function( err, result ){
+        if( result ){
+            _editormd.setMarkdown( result.toString( ) );
+        }else{
+            _editormd.setMarkdown( "    No content read." );
+        }
+    });
+};
+// doSaveData
+function doSaveData( _editormd, Tx_FilePath ){
+    if( !_editormd ){
+        return;
+    }
+    KFileTools.writeFileAsync(Tx_FilePath, _editormd.getMarkdown( ), {}, function( err, result ){
+        // console.log( err, result );
+    });
+};
+
+</script>
+</html>

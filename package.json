@@ -1,0 +1,56 @@
+{
+
+  "main": "./app/index.html", 
+
+  "name": "MarkdownEditor",
+
+  "description": "Markdown Editor",
+
+  "version": "1.0.0.0",
+
+  "chromium-args":"--disable-web-security --allow-outdated-plugins --ignore-gpu-blacklist --allow-file-access-from-files",
+
+  "user-agent": "Mozilla/5.0 (%osinfo) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/%webkit_ver Safari/537.36 markdowneditor(%ver)",
+
+  "nodejs": true,
+
+  "single-instance": true,   
+
+  "window": {
+ 
+    "icon": "./app/img/system/applog.png",
+
+    "width": 1024,
+    "height": 600,
+
+    "toolbar": false,         
+
+    "kiosk": false,          
+
+    "show_in_taskbar":true,   
+
+    "frame": false,              
+
+    "resizable":true,  
+
+    "show": true
+     
+  },
+
+  "webkit": {
+
+    "plugin": true,
+
+    "java": true,
+
+    "page-cache" : false,
+
+    "npapi":true 
+
+  },
+
+  "dependencies":{
+  }
+
+
+}
